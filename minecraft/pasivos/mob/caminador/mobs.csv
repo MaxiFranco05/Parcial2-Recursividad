@@ -1,4 +1,0 @@
-id,name,displayName,type,category,width,height,hostilidad,subtipo,movilidad
-2,allay,Allay,mob,Passive mobs,0.35,0.6,pasivos,mob,caminador
-68,iron_golem,Iron Golem,mob,Passive mobs,1.4,2.7,pasivos,mob,caminador
-116,snow_golem,Snow Golem,mob,Passive mobs,0.7,1.9,pasivos,mob,caminador
