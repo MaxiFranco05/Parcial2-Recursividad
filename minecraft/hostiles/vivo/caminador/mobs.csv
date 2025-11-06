@@ -1,0 +1,22 @@
+id,name,displayName,type,category,width,height,hostilidad,subtipo,movilidad
+16,bogged,Bogged,hostile,Hostile mobs,0.6,1.99,hostiles,vivo,caminador
+17,breeze,Breeze,hostile,Hostile mobs,0.6,1.77,hostiles,vivo,caminador
+21,cave_spider,Cave Spider,hostile,Hostile mobs,0.7,0.5,hostiles,vivo,caminador
+29,creaking,Creaking,hostile,Hostile mobs,0.9,2.7,hostiles,vivo,caminador
+30,creeper,Creeper,hostile,Hostile mobs,0.6,1.7,hostiles,vivo,caminador
+39,enderman,Enderman,hostile,Hostile mobs,0.6,2.9,hostiles,vivo,caminador
+40,endermite,Endermite,hostile,Hostile mobs,0.4,0.3,hostiles,vivo,caminador
+44,evoker,Evoker,hostile,Hostile mobs,0.6,1.95,hostiles,vivo,caminador
+57,giant,Giant,hostile,Hostile mobs,3.6,12,hostiles,vivo,caminador
+66,illusioner,Illusioner,hostile,Hostile mobs,0.6,1.95,hostiles,vivo,caminador
+96,piglin,Piglin,hostile,Hostile mobs,0.6,1.95,hostiles,vivo,caminador
+97,piglin_brute,Piglin Brute,hostile,Hostile mobs,0.6,1.95,hostiles,vivo,caminador
+98,pillager,Pillager,hostile,Hostile mobs,0.6,1.95,hostiles,vivo,caminador
+104,ravager,Ravager,hostile,Hostile mobs,1.95,2.2,hostiles,vivo,caminador
+109,silverfish,Silverfish,hostile,Hostile mobs,0.4,0.3,hostiles,vivo,caminador
+119,spider,Spider,hostile,Hostile mobs,1.4,0.9,hostiles,vivo,caminador
+135,vindicator,Vindicator,hostile,Hostile mobs,0.6,1.95,hostiles,vivo,caminador
+137,warden,Warden,hostile,Hostile mobs,0.9,2.9,hostiles,vivo,caminador
+139,witch,Witch,hostile,Hostile mobs,0.6,1.95,hostiles,vivo,caminador
+140,wither,Wither,hostile,Hostile mobs,0.9,3.5,hostiles,vivo,caminador
+144,zoglin,Zoglin,hostile,Hostile mobs,1.3964844,1.4,hostiles,vivo,caminador

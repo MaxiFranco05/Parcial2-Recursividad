@@ -1,0 +1,5 @@
+id,name,displayName,type,category,width,height,hostilidad,subtipo,movilidad
+41,ender_dragon,Ender Dragon,mob,Hostile mobs,16,8,hostiles,mob,caminador
+78,magma_cube,Magma Cube,mob,Hostile mobs,0.52,0.52,hostiles,mob,caminador
+107,shulker,Shulker,mob,Hostile mobs,1,1,hostiles,mob,caminador
+112,slime,Slime,mob,Hostile mobs,0.52,0.52,hostiles,mob,caminador

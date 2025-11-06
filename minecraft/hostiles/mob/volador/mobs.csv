@@ -1,0 +1,3 @@
+id,name,displayName,type,category,width,height,hostilidad,subtipo,movilidad
+55,ghast,Ghast,mob,Hostile mobs,4,4,hostiles,mob,volador
+94,phantom,Phantom,mob,Hostile mobs,0.9,0.5,hostiles,mob,volador
