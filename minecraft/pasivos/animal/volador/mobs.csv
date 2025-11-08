@@ -1,0 +1,5 @@
+id,name,displayName,type,category,width,height,hostilidad,subtipo,movilidad
+10,bat,Bat,animal,Passive mobs,0.5,0.9,pasivos,animal,volador
+11,bee,Bee,animal,Passive mobs,0.7,0.6,pasivos,animal,volador
+56,happy_ghast,Happy Ghast,animal,Passive mobs,4,4,pasivos,animal,volador
+93,parrot,Parrot,animal,Passive mobs,0.5,0.9,pasivos,animal,volador

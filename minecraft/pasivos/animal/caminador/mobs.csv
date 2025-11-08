@@ -1,0 +1,26 @@
+id,name,displayName,type,category,width,height,hostilidad,subtipo,movilidad
+4,armadillo,Armadillo,animal,Passive mobs,0.7,0.65,pasivos,animal,caminador
+19,camel,Camel,animal,Passive mobs,1.7,2.375,pasivos,animal,caminador
+20,cat,Cat,animal,Passive mobs,0.6,0.7,pasivos,animal,caminador
+25,chicken,Chicken,animal,Passive mobs,0.4,0.7,pasivos,animal,caminador
+28,cow,Cow,animal,Passive mobs,0.9,1.4,pasivos,animal,caminador
+34,donkey,Donkey,animal,Passive mobs,1.3964844,1.5,pasivos,animal,caminador
+52,fox,Fox,animal,Passive mobs,0.6,0.7,pasivos,animal,caminador
+53,frog,Frog,animal,Passive mobs,0.5,0.5,pasivos,animal,caminador
+60,goat,Goat,animal,Passive mobs,0.9,1.3,pasivos,animal,caminador
+64,horse,Horse,animal,Passive mobs,1.3964844,1.6,pasivos,animal,caminador
+76,llama,Llama,animal,Passive mobs,0.9,1.87,pasivos,animal,caminador
+83,mooshroom,Mooshroom,animal,Passive mobs,0.9,1.4,pasivos,animal,caminador
+84,mule,Mule,animal,Passive mobs,1.3964844,1.6,pasivos,animal,caminador
+87,ocelot,Ocelot,animal,Passive mobs,0.6,0.7,pasivos,animal,caminador
+92,panda,Panda,animal,Passive mobs,1.3,1.25,pasivos,animal,caminador
+95,pig,Pig,animal,Passive mobs,0.9,0.9,pasivos,animal,caminador
+99,polar_bear,Polar Bear,animal,Passive mobs,1.4,1.4,pasivos,animal,caminador
+103,rabbit,Rabbit,animal,Passive mobs,0.4,0.5,pasivos,animal,caminador
+106,sheep,Sheep,animal,Passive mobs,0.9,1.3,pasivos,animal,caminador
+111,skeleton_horse,Skeleton Horse,animal,Passive mobs,1.3964844,1.6,pasivos,animal,caminador
+114,sniffer,Sniffer,animal,Passive mobs,1.9,1.75,pasivos,animal,caminador
+129,trader_llama,Trader Llama,animal,Passive mobs,0.9,1.87,pasivos,animal,caminador
+134,villager,Villager,passive,Passive mobs,0.6,1.95,pasivos,animal,caminador
+136,wandering_trader,Wandering Trader,passive,Passive mobs,0.6,1.95,pasivos,animal,caminador
+143,wolf,Wolf,animal,Passive mobs,0.6,0.85,pasivos,animal,caminador

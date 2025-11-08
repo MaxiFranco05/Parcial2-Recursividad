@@ -1,71 +1,16 @@
-import csv
 import os
 
-from mod.etl import TIPOS_PERMITIDOS, derivar_hostilidad, buscar_en_arbol
+from mod.etl import TIPOS_PERMITIDOS, buscar_en_arbol
+from mod.utils import leer_csv, escribir_csv, formatear_mob, estadisticas_mobs, ordenar_mobs
 
 
-# Base directory where the hierarchy lives
+# Ruta base de la jerarquia
 BASE_DIR = "minecraft"
-
-
-# -------------------- Helpers --------------------
-def leer_csv(path):
-	"""Lee un CSV y devuelve lista de diccionarios. Devuelve [] si no existe.
-
-	Comentario sencillo:
-	- Si no existe el archivo, devolvemos una lista vacía.
-	- Si existe, usamos csv.DictReader para obtener una lista de filas (como diccionarios).
-	"""
-	if not os.path.exists(path):
-		return []
-	with open(path, "r", encoding="utf-8", newline="") as f:
-		return list(csv.DictReader(f))
-
-
-def escribir_csv(path, filas):
-	"""Escribe una lista de diccionarios en el archivo CSV.
-
-	Política aplicada:
-	- Si `filas` es None, no hacemos nada.
-	- Si `filas` es una lista vacía, borramos el archivo si existe (significa que ya no hay mobs).
-	- En caso contrario, creamos el directorio padre si hace falta y escribimos el CSV con las claves de la primera fila como encabezado.
-
-	Comentario sencillo: así mantenemos la estructura en archivos CSV colocados en las
-	carpetas finales del árbol.
-	"""
-	dirpath = os.path.dirname(path)
-	if filas is None:
-		return
-	if not filas:
-		# borrar archivo si existe (cuando ya no quedan registros)
-		try:
-			if os.path.exists(path):
-				os.remove(path)
-		except OSError:
-			pass
-		return
-	os.makedirs(dirpath, exist_ok=True)
-	campos = list(filas[0].keys())
-	# Escritura simple; se podría hacer más segura con un archivo temporal + os.replace.
-	with open(path, "w", encoding="utf-8", newline="") as f:
-		escritor = csv.DictWriter(f, fieldnames=campos)
-		escritor.writeheader()
-		escritor.writerows(filas)
 
 
 # -------------------- 1) Listar --------------------
 def listar_recursivo(ruta_base, limite=5):
-	"""Imprime hasta `limite` filas encontradas en los `mobs.csv` del árbol.
-
-	Explicación de la recursividad (versión simple):
-	- La función interna `_listar` procesa una carpeta: si encuentra `mobs.csv` imprime sus filas.
-	- Luego pide la lista de subcarpetas y llama a sí misma (`_listar`) para cada una.
-	- Esto repite el mismo paso en cada subcarpeta hasta recorrer todo el árbol o hasta llegar al límite.
-
-	Por qué funciona y cuándo se detiene:
-	- Caso base: si ya se alcanzó el `limite` se vuelve sin seguir; esto evita recorrer todo el árbol cuando no hace falta.
-	- Paso recursivo: para cada subcarpeta se vuelve a ejecutar la misma lógica.
-	"""
+	"""Recorre el árbol desde `ruta_base` e imprime hasta `limite` mobs encontrados."""
 	mostrados = 0
 
 	def _listar(ruta):
@@ -76,19 +21,14 @@ def listar_recursivo(ruta_base, limite=5):
 		ruta_csv = os.path.join(ruta, "mobs.csv")
 		if os.path.exists(ruta_csv):
 			filas = leer_csv(ruta_csv)
-			if filas:  # Solo si hay filas
-				# Obtenemos la categoría del primer mob (todos en el mismo archivo tienen la misma)
+			if filas:
+				# Obtenemos la categoría del primer mob
 				tipo, categoria = filas[0].get("type", "Desconocida"), filas[0].get("category", "Desconocida")
 				print(f"\n=== {tipo.title()} - {categoria.title()} ===")
-				
 				for fila in filas:
 					if mostrados >= limite:
 						return
-					# Mostrar la fila en formato amigable
-					print(f"ID: {fila.get('id', 'N/A')} | "
-						f"Nombre: {fila.get('displayName', fila.get('name', 'N/A'))} | "
-						f"Tipo: {fila.get('type', 'N/A')} | "
-						f"Dimensiones: {float(fila.get('width', '0')):.2f}x{float(fila.get('height', '0')):.2f}")
+					print(formatear_mob(fila))
 					mostrados += 1
 		# Recorremos subcarpetas y llamamos de nuevo a `_listar` (recursión)
 		try:
@@ -110,14 +50,9 @@ def listar_interactivo():
 
 # -------------------- 2) Agregar --------------------
 def agregar_recursivo(ruta_base, nueva_fila, ruta_destino):
-	"""Agrega una fila al mobs.csv en la ruta específica según su clasificación.
+	"""Agrega `nueva_fila` al `mobs.csv` dentro de `ruta_destino` relativa a `ruta_base`.
 
-	Lógica:
-	- La ruta_destino se construye según hostilidad/subtipo/movilidad
-	- Crea el archivo mobs.csv si no existe
-	- Agrega el mob manteniendo todos los campos
-
-	Retorna: (fila_agregada, ruta_csv) si tuvo éxito, o None si hubo fallo.
+	Retorna (fila_agregada, ruta_csv) o None en caso de fallo.
 	"""
 	try:
 		# Construir ruta completa al CSV destino
@@ -139,18 +74,12 @@ def agregar_recursivo(ruta_base, nueva_fila, ruta_destino):
 
 
 def agregar_interactivo():
-	"""Interfaz para agregar un mob con validaciones inmediatas.
-
-	Comentarios sencillos:
-	- Valida cada campo inmediatamente después de ingresarlo.
-	- Muestra opciones válidas para type y category.
-	- Normaliza y verifica los datos en el momento.
-	"""
+	"""Interfaz interactiva: solicita datos, valida y agrega el mob al árbol."""
 	ruta = os.path.join(BASE_DIR)
 	print("Ingrese valores (o 'cancel' para cancelar en cualquier momento)")
 	fila = {}
 
-	# 1. ID - Validación inmediata de obligatorio y único
+	# 1. ID - obligatorio y único
 	while True:
 		id_input = input("id: ").strip()
 		if id_input.lower() == 'cancel':
@@ -179,7 +108,7 @@ def agregar_interactivo():
 		fila["id"] = id_input
 		break
 
-	# 2. Name - Validación inmediata de obligatorio y único
+	# 2. Name - obligatorio y único
 	while True:
 		name_input = input("name: ").strip()
 		if name_input.lower() == 'cancel':
@@ -215,7 +144,7 @@ def agregar_interactivo():
 		return None
 	fila["displayName"] = display_name if display_name else fila["name"]  # Usar name si está vacío
 
-	# 4. Type - Mostrar y validar contra opciones permitidas
+	# 4. Type - validar contra opciones permitidas
 	print(f"\nTipos permitidos: {sorted(TIPOS_PERMITIDOS)}")
 	while True:
 		type_input = input("type: ").strip().lower()
@@ -230,7 +159,7 @@ def agregar_interactivo():
 		fila["type"] = type_input
 		break
 
-	# 5. Category y clasificación - Recopilar toda la información de ubicación
+	# 5. Category y clasificación - recopilar la ruta de destino
 	try:
 		hostilidades = {d for d in os.listdir(BASE_DIR) if os.path.isdir(os.path.join(BASE_DIR, d))}
 	except FileNotFoundError:
@@ -303,7 +232,7 @@ def agregar_interactivo():
 	fila["subtipo"] = subtipo
 	fila["movilidad"] = movilidad
 
-	# 6 y 7. Width y Height - Validar que sean numéricos
+	# 6 y 7. Width y Height - validar numéricos
 	for dim in ("width", "height"):
 		while True:
 			v = input(f"{dim}: ").strip()
@@ -343,16 +272,13 @@ def agregar_interactivo():
 
 # -------------------- 3) Actualizar --------------------
 def actualizar_recursivo(ruta_base, id_buscar, nuevos_valores):
-	"""Actualiza el primer mob cuyo 'name' coincida con id_buscar.
-
-	Lógica:
-	- Buscamos `mobs.csv` en la carpeta; si hay filas, iteramos y comparamos el campo `name`.
-	- Si encontramos una coincidencia, actualizamos esa fila con los nuevos valores y escribimos.
-	- Si no está en esa carpeta, probamos en cada subcarpeta (recursión).
+	"""Actualiza el primer mob cuyo `id` o `name` coincida con `id_buscar`.
 
 	Retorna (obj_actualizado, ruta_csv) o None si no encuentra.
 	"""
 	resultado = None
+
+	search = str(id_buscar).strip().lower()
 
 	def _actualizar(ruta):
 		nonlocal resultado
@@ -362,8 +288,10 @@ def actualizar_recursivo(ruta_base, id_buscar, nuevos_valores):
 		if os.path.exists(ruta_csv):
 			filas = leer_csv(ruta_csv)
 			for i, fila in enumerate(filas):
-				# Comparamos por 'name' (no por id), como solicitaste
-				if str(fila.get("name", "")).strip() == str(id_buscar).strip():
+				name_val = str(fila.get("name", "")).strip().lower()
+				id_val = str(fila.get("id", "")).strip().lower()
+				# Coincidir por id exacto o por name exacto
+				if search == id_val or search == name_val:
 					filas[i].update(nuevos_valores)
 					escribir_csv(ruta_csv, filas)
 					resultado = (filas[i], ruta_csv)
@@ -518,15 +446,6 @@ def actualizar_interactivo():
 	print("No se pudo actualizar el mob")
 	return None
 
-
-# -------------------- Helpers --------------------
-def formatear_mob(mob):
-    """Formatea los datos de un mob en un string legible."""
-    return (f"ID: {mob.get('id', 'N/A')} | "
-            f"Nombre: {mob.get('displayName', mob.get('name', 'N/A'))} | "
-            f"Tipo: {mob.get('type', 'N/A')} | "
-            f"Dimensiones: {float(mob.get('width', '0')):.2f}x{float(mob.get('height', '0')):.2f}")
-
 # -------------------- 4) Buscar --------------------
 def buscar_mob(termino_buscar):
     """Busca mobs por nombre o ID, permitiendo búsqueda parcial para nombres.
@@ -584,18 +503,12 @@ def buscar_interactivo():
     
     return resultados
 
+
 # -------------------- 5) Eliminar --------------------
 def eliminar_recursivo(ruta_base, id_eliminar):
-	"""Elimina el primer mob que coincida por `name` en el árbol.
+	"""Elimina el primer mob cuyo `name` coincida con `id_eliminar`.
 
-	- Recorre las carpetas buscando `mobs.csv`.
-	- Si encuentra la fila que tiene `name` igual a `id_eliminar`, la elimina y reescribe el CSV.
-	- Retorna (fila_eliminada, ruta_csv) cuando elimina, o None si no encuentra.
-
-	Comentario sobre la recursión: el patrón es igual que en listar/actualizar/agregar:
-	- En cada carpeta miramos el CSV (caso local).
-	- Si no está, llamamos a la misma función para cada subcarpeta (llamada recursiva)
-	- Se detiene cuando encuentra algo o cuando no quedan subcarpetas.
+	Retorna (fila_eliminada, ruta_csv) o None si no encuentra.
 	"""
 	resultado = None
 
@@ -656,3 +569,60 @@ def eliminar_interactivo():
 		return res
 	print("No se pudo eliminar el mob")
 	return None
+
+
+# -------------------- 6) Estadísticas globales --------------------
+def estadisticas_interactivo(ruta_base=BASE_DIR):
+	"""Muestra estadísticas globales sobre todos los mobs bajo `ruta_base`.
+
+	Esta función imprime un resumen legible con	total de mobs, conteos por categoría/tipo y estadísticas simples de	dimensiones (ancho/alto). Usa `mod.utils.estadisticas_mobs`.
+	"""
+	try:
+		stats = estadisticas_mobs(ruta_base)
+	except Exception as e:
+		print(f"Error al calcular estadísticas: {e}")
+		return None
+
+	# Salida legible para el usuario
+	print("\n=== Estadísticas globales ===")
+	print(f"Total de mobs: {stats.get('total', 0)}")
+	print("\nPor categoría:")
+	for cat, cnt in stats.get("por_category", {}).items():
+		print(f" - {cat}: {cnt}")
+	print("\nPor tipo:")
+	for typ, cnt in stats.get("por_type", {}).items():
+		print(f" - {typ}: {cnt}")
+
+	print("\nDimensiones (promedio/min/max):")
+	print(f" Width: {stats.get('avg_width'):.2f} / {stats.get('min_width'):.2f} / {stats.get('max_width'):.2f}")
+	print(f" Height: {stats.get('avg_height'):.2f} / {stats.get('min_height'):.2f} / {stats.get('max_height'):.2f}")
+	return stats
+
+
+# -------------------- 7) Ordenamiento global --------------------
+def ordenar_interactivo(ruta_base=BASE_DIR):
+	"""Interfaz simple para ordenar mobs globalmente.
+
+	Permite elegir la clave de ordenamiento y muestra los resultados formateados. No modifica archivos; solo muestra la lista ordenada por pantalla.
+	"""
+	print("\nOpciones de ordenamiento: id, name, category, type")
+	clave = input("Ingrese clave de ordenamiento (por defecto 'name'): ").strip() or "name"
+	sentido = input("Invertir orden? (s/N): ").strip().lower()
+	reverse = True if sentido == "s" else False
+
+	try:
+		ordenados = ordenar_mobs(ruta_base, key=clave, reverse=reverse)
+	except Exception as e:
+		print(f"Error al ordenar: {e}")
+		return None
+
+	if not ordenados:
+		print("No hay mobs para mostrar")
+		return []
+
+	print(f"\nMobs ordenados por '{clave}' (invertido={reverse}):")
+	for mob, path in ordenados:
+		print(formatear_mob(mob))
+		print(f"  Ubicación: {os.path.dirname(path)}")
+
+	return ordenados

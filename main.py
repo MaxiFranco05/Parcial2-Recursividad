@@ -1,6 +1,13 @@
 import os
 from mod.etl import buscar_interactivo, generar_jerarquia
-from mod.crud import listar_interactivo, agregar_interactivo, actualizar_interactivo, eliminar_interactivo
+from mod.crud import (
+	listar_interactivo,
+	agregar_interactivo,
+	actualizar_interactivo,
+	eliminar_interactivo,
+	estadisticas_interactivo,
+	ordenar_interactivo,
+)
 
 
 def mostrar_menu():
@@ -10,6 +17,8 @@ def mostrar_menu():
 	print("3) Actualizar mob por nombre")
 	print("4) Eliminar mob por nombre")
 	print("5) Buscar mobs")
+	print("6) Estadísticas globales")
+	print("7) Ordenar mobs globalmente")
 	print("0) Salir")
 
 def main():
@@ -36,6 +45,10 @@ def main():
 			eliminar_interactivo()
 		elif opcion == "5":
 			buscar_interactivo()
+		elif opcion == "6":
+			estadisticas_interactivo()
+		elif opcion == "7":
+			ordenar_interactivo()
 		elif opcion == "0":
 			print("¡Hasta luego!")
 			break

@@ -396,7 +396,8 @@ tp_integrador_prog1/
 └── mod/                     # Módulo de utilidades
     ├── __init__.py
     ├── crud.py              # Operaciones CRUD recursivas
-    └── etl.py               # ETL y generación de jerarquía
+    ├── etl.py               # ETL y generación de jerarquía
+    └── utils.py             # Funciones auxiliares
 ```
 
 ### **Principios de Diseño**
@@ -550,5 +551,4 @@ Este proyecto ha permitido consolidar conocimientos fundamentales de programaci�
 - La efectividad del **trabajo en equipo** con división clara de responsabilidades.
 
 ---
-
 **Desarrollado con 💻 por Maximo Franco y Octavio Fiore | TUP - UTN | 2025**
