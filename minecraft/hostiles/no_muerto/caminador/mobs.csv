@@ -1,9 +1,0 @@
-id,name,displayName,type,category,width,height,hostilidad,subtipo,movilidad
-36,drowned,Drowned,hostile,Hostile mobs,0.6,1.95,hostiles,no_muerto,caminador
-65,husk,Husk,hostile,Hostile mobs,0.6,1.95,hostiles,no_muerto,caminador
-110,skeleton,Skeleton,hostile,Hostile mobs,0.6,1.99,hostiles,no_muerto,caminador
-123,stray,Stray,hostile,Hostile mobs,0.6,1.99,hostiles,no_muerto,caminador
-141,wither_skeleton,Wither Skeleton,hostile,Hostile mobs,0.7,2.4,hostiles,no_muerto,caminador
-145,zombie,Zombie,hostile,Hostile mobs,0.6,1.95,hostiles,no_muerto,caminador
-147,zombie_villager,Zombie Villager,hostile,Hostile mobs,0.6,1.95,hostiles,no_muerto,caminador
-148,zombified_piglin,Zombified Piglin,hostile,Hostile mobs,0.6,1.95,hostiles,no_muerto,caminador
